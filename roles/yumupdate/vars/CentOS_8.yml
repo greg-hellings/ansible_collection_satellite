@@ -1,0 +1,4 @@
+satellite_add_pkgs:
+  - unzip
+  - ipa-client
+  - tmux

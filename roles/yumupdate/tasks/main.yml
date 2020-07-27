@@ -1,16 +1,30 @@
-# tasks file for yumupdate
-# TASKS
+- name: load system specific vars
+  include_vars: "{{ __yumupdate_vars_file }}"
+  loop:
+    - "{{ ansible_facts.os_family }}.yml"
+    - "{{ ansible_facts.distribution }}.yml"
+    - "{{ ansible_facts.distribution }}_{{ ansible_facts.distribution_major_version }}.yml"
+    - "{{ ansible_facts.distribution }}_{{ ansible_facts.distribution_version }}.yml"
+  vars:
+    __yumupdate_vars_file: "{{ role_path }}/vars/{{ item }}"
+  when: __yumupdate_vars_file is file
+
 - name: yum update | yum-clean-metadata
   command: yum clean all  # noqa: 301
   args:
     warn: false
+  changed_when: false  # Yeah, it really does change. But we don't care much about that
 
 - name: yum update | Remove unneeded packages
+  become: "{{ yumupdate_become }}"
+  become_user: "{{ yumupdate_become_user }}"
   package:
     name: "{{ satellite_remove_pkgs }}"
     state: absent
 
 - name: yum update | installing secuity Packages
+  become: "{{ yumupdate_become }}"
+  become_user: "{{ yumupdate_become_user }}"
   package:
     name: "{{ satellite_add_pkgs }}"
     state: present
@@ -19,20 +33,17 @@
   shell: yum -q check-update > /dev/null  # noqa: 301 303
   register: patch_lvl
   failed_when: patch_lvl.rc not in [100,0]
+  changed_when: false
 
-- name:
-  block:
+- block:
     - name: yum update | Yum update the system
-      package:
-        name: "*"
-        state: latest  # noqa: 403
+      include_role:
+        name: oasis_roles.system.package_updater
 
     - name: yum update | Reboot on new kernel
-      reboot:
-
-    - name: yum update | Wait 600 seconds for connection to become reachable
-      wait_for_connection:
-
+      include_role:
+        name: oasis_roles.system.reboot
+      when: ansible_connection not in ('local', 'docker', 'podman')
   when: patch_lvl.rc == 100
 
 - name: yum update | Refreshing Ansible facts

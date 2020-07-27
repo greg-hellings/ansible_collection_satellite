@@ -1,0 +1,5 @@
+driver:
+  name: docker
+platforms:
+  - name: yumupdate_default
+    image: centos:8
