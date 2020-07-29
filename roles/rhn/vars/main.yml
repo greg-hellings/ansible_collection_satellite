@@ -1,0 +1,33 @@
+# Vars for rhsm
+satellite_rhn_repositories:
+  - rhel-7-server-satellite-{{ satellite_version }}-rpms
+  - rhel-7-server-rpms
+  - rhel-server-rhscl-7-rpms
+  - rhel-7-server-satellite-maintenance-6-rpms
+  - rhel-7-server-ansible-2.8-rpms
+
+satellite_rhn_disconnected_repositories_file: /etc/yum.repos.d/disconnected.repo
+
+__satellite_rhn_disconnected_repositories_base: &base
+  gpgcheck: false
+  enabled: true
+  file: "{{ satellite_rhn_disconnected_repositories_file }}"
+
+satellite_rhn_disconnected_repositories:
+  - <<: *base
+    name: rhel-7-server-rpms
+    baseurl: "{{ satellite_content_source }}/content/dist/rhel/server/7/{{ satellite_rhelver }}/x86_64/os/"
+  - <<: *base
+    name: rhel-7-server-satellite-{{ satellite_version }}-rpms]
+    # yamllint disable-line rule:line-length
+    baseurl: "{{ satellite_content_source }}/content/dist/rhel/server/7/7Server/x86_64/satellite/{{ satellite_version }}/os/"
+  - <<: *base
+    name: rhel-7-server-ansible-2.8-rpms
+    baseurl: "{{ satellite_content_source }}/content/dist/rhel/server/7/7Server/x86_64/ansible/2.8/os/"
+  - <<: *base
+    name: rhel-7-server-satellite-maintenance-6-rpms
+    baseurl: "{{ satellite_content_source }}/content/dist/rhel/server/7/7Server/x86_64/sat-maintenance/6/os/"
+  - <<: *base
+    name: rhel-server-rhscl-7-rpms
+    baseurl: "{{ satellite_content_source }}/content/dist/rhel/server/7/{{ satellite_rhelver }}/x86_64/rhscl/1/os/"
+    description: Red Hat Software Collection RPMs for Red Hat Enterprise Linux 7 Server x86_64 7Server

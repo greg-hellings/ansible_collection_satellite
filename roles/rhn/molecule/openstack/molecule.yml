@@ -1,0 +1,15 @@
+driver:
+  name: openstack
+platforms:
+  - name: satellite_rhn
+provisioner:
+  inventory:
+    group_vars:
+      all:
+        satellite_rhn_connect: connect
+        satellite_rhn_username: "{{ lookup('env', 'OASIS_RHSM_USERNAME') }}"
+        satellite_rhn_password: "{{ lookup('env', 'OASIS_RHSM_PASSWORD') }}"
+        satellite_rhn_host: "{{ lookup('env', 'OASIS_RHSM_SERVER_HOSTNAME') }}"
+        raw_pool_ids: "{{ lookup('env', 'OASIS_RHSM_POOL_IDS') }}"
+        satellite_rhn_pool_id: "{{ raw_pool_ids[0] }}"
+        satellite_version: "6.7"

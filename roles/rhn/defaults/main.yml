@@ -1,0 +1,11 @@
+# default vars for rhn role
+satellite_rhn_activation_key: "{{ lookup('env', 'SATELLITE_RHN_AK') | default(None, true) }}"
+satellite_rhn_org: "{{ lookup('env', 'SATELLITE_RHN_ORG') | default(None, true) }}"
+satellite_rhn_pool_id: "{{ lookup('env', 'SATELLITE_RHN_POOL_ID') | default(None, true) }}"
+satellite_rhn_username: "{{ lookup('env', 'SATELLITE_RHN_USER') | default(None, true) }}"
+satellite_rhn_password: "{{ lookup('env', 'SATELLITE_RHN_PASSWORD') | default(None, true) }}"
+satellite_rhn_connect: "{{ lookup('env', 'SATELLITE_RHN_CONNECT') | default('connect', true) }}"
+satellite_rhn_host: "{{ lookup('env', 'SATELLITE_RHN_HOST') | default('subscription.rhsm.redhat.com', true) }}"
+satellite_version: "{{ lookup('env', 'SATELLITE_VERSION') | default(None, true) }}"
+satellite_rhelver: "{{ lookup('env', 'SATELLITE_RHELVER') | default(None, true) }}"
+satellite_content_source: "{{ lookup('env', 'SATELLITE_CONTENT_SOURCE') | default(None, true) }}"

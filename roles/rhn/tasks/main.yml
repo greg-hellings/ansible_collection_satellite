@@ -1,0 +1,38 @@
+- name: check arguments
+  assert:
+    that:
+      - satellite_rhn_connect in ('disconnect', 'connect')
+      - satellite_version is not none
+
+- block:
+    - name: main | clean repos
+      import_tasks: clean_repos.yml
+
+    - name: main | call rhsm
+      include_role:
+        name: oasis_roles.system.rhsm
+      vars:
+        rhsm_username: "{{ satellite_rhn_username | default(omit, true) }}"
+        rhsm_password: "{{ satellite_rhn_password | default(omit, true) }}"
+        rhsm_pool_ids:
+          - "{{ satellite_rhn_pool_id }}"
+        rhsm_org_id: "{{ satellite_rhn_org | default(omit, true) }}"
+        rhsm_activationkey: "{{ satellite_rhn_activation_key | default(omit, true) }}"
+        rhsm_server_hostname: "{{ satellite_rhn_host | default(omit, true) }}"
+        rhsm_repositories:
+          disabled:
+            - "*"
+          enabled: "{{ satellite_rhn_repositories }}"
+  when: satellite_rhn_connect == 'connect'
+
+- block:
+    - name: check disconnected arguments
+      assert:
+        that:
+          - satellite_content_source is not none
+          - satellite_rhelver is not none
+
+    - name: main | create local repo
+      include_role:
+        name: oasis_roles.system.system_repositories
+  when: satellite_rhn_connect == 'disconnect'
