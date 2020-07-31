@@ -2,3 +2,8 @@
   hosts: all
   roles:
     - role: install
+  vars:
+    satellite_admin_username: satadmin
+    satellite_admin_password: password
+    satellite_admin_organization: satorg
+    satellite_admin_location: anytown_usa

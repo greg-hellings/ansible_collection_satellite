@@ -1,0 +1,18 @@
+driver:
+  name: openstack
+platforms:
+  - name: satellite_install_default
+    flavor: ci.m1.xlarge
+# Until an update is made to Molecule to support env vars here, this needs
+# its own lint check
+# Follow: https://github.com/ansible-community/molecule/pull/2770 for updates
+lint: |
+  set -ex
+  #export ANSIBLE_COLLECTIONS_PATHS="${MOLECULE_EPHEMERAL_DIRECTORY}/collections"
+  yamllint -c ../../tests/yamllint.yml  .  # relative to role dir
+  #ansible-lint -R -r ../../tests/ansible_lint_rules -c ../../tests/ansible-lint .
+  find . -name '*.py' -print0 | xargs -l -0 flake8
+provisioner:
+  inventory:
+    links:
+      group_vars: ../../../../examples/example_ansible/inventory/group_vars

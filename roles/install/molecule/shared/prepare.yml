@@ -1,15 +1,23 @@
 - name: register RHSM
   hosts: all
   roles:
-    - role: oasis_roles.system.rhsm
-      when: ansible_distribution == 'RedHat'
+    - role: oasis_roles.satellite.rhn
+    - role: oasis_roles.satellite.yumupdate
+    # Rebooting in yumupdate causes loss of DNS servers
+    - role: oasis_roles.system.dns_resolv
+    - role: oasis_roles.system.firewalld
+    - role: oasis_roles.system.hostname
   vars:
-    rhsm_username: "{{ lookup('env', 'OASIS_RHSM_USERNAME') }}"
-    rhsm_password: "{{ lookup('env', 'OASIS_RHSM_PASSWORD') }}"
-    rhsm_server_hostname: "{{ lookup('env', 'OASIS_RHSM_SERVER_HOSTNAME') }}"
-    rhsm_pool_ids: "{{ lookup('env', 'OASIS_RHSM_POOL_IDS') }}"
-    rhsm_repositories:
-      enabled:
-        - rhel-7-server-rpms
-        - rhel-7-server-extras-rpms
-        - rhel-7-server-optional-rpms
+    satellite_rhn_connect: connect
+    satellite_rhn_username: "{{ lookup('env', 'OASIS_RHSM_USERNAME') }}"
+    satellite_rhn_password: "{{ lookup('env', 'OASIS_RHSM_PASSWORD') }}"
+    satellite_rhn_host: "{{ lookup('env', 'OASIS_RHSM_SERVER_HOSTNAME') }}"
+    raw_pool_ids: "{{ lookup('env', 'OASIS_RHSM_POOL_IDS') }}"
+    satellite_rhn_pool_id: "{{ raw_pool_ids[0] }}"
+    satellite_version: "6.7"
+    dns_resolv_servers:
+      - "10.11.142.1"
+      - "10.11.5.19"
+    hostname_inject_hosts_files: false
+    hostname: ci-vm-{{ ansible_facts.default_ipv4.address.replace('.', '-')
+      }}.hosted.upshift.rdu2.redhat.com

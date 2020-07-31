@@ -4,6 +4,7 @@
      dest: "/tmp/{{ satellite_apypie_rpm }}"
 
 - name: theforeman | install python2 apypie rpm
-  yum:
+  become: true
+  package:
      name: "/tmp/{{ satellite_apypie_rpm }}"
      state: present

@@ -1,8 +1,11 @@
 - name: site |  Install Satellite
   hosts: satellite
   roles:
-    - role: rhsm
+    - role: rhn
     - role: yumupdate
+    - role: oasis_roles.system.dns_resolv
+    - role: oasis_roles.system.firewalld
+    - role: oasis_roles.system.hostname
     - role: install
     - role: content
     - role: config

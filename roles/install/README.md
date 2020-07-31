@@ -7,8 +7,11 @@ Requirements
 ------------
 
 Ansible 2.8 or higher
+
 Satellite-ansible-collection
+
 Red Hat Enterprise Linux 7 or equivalent
+
 Valid Red Hat Subscription
 
 
@@ -50,7 +53,7 @@ Dependencies
 ------------
 
 From Ansible Galaxy
-- oasis_roles.system
+- oasis\_roles.system
 - theforeman.foreman
 
 Example Playbooks

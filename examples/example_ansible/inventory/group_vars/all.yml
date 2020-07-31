@@ -45,15 +45,9 @@ satellite_certs_server_ca_cert: "{{ lookup('env', 'SATELLITE_CERTS_SERVER_CA_CER
 # libvirt vars
 satellite_vm_location: "/var/lib/libvirt/images"
 
-# yumupdate vars
-satellite_add_pkgs:
-  - screen
-  - unzip
-  - ipa-client
-  - tmux
-
-satellite_remove_pkgs:
-  - iwl7265-firmware
+firewalld_zone: public
+firewalld_services:
+  - ssh
 
 #satellite_req_dirs: TODO
 #  - mount_point: /var/lib/pulp
@@ -69,12 +63,6 @@ satellite_remove_pkgs:
 #    lv_name: var_spool_squid
 #    lv_size: 10g
 
-# install role firewall vars
-satellite_fw_service_name: RH-Satellite-6
-
-# install role theforeman vars
-satellite_apypie_rpm: "python2-apypie-0.2.1-2.el7.noarch.rpm"
-
 # install role satellite-options:
 satellite_dhcp_interface: "{{ ansible_default_ipv4.interface }}"  # eth0
 satellite_dhcp_fromip: "192.168.122.100"
@@ -83,30 +71,6 @@ satellite_dhcp_range: "{{ satellite_dhcp_fromip }} {{ satellite_dhcp_toip }}"
 satellite_dhcp_gateway: "{{ ansible_default_ipv4.gateway }}"  # 192.168.122.1
 satellite_dhcp_nameservers: "{{ ansible_dns.nameservers[0] }}"  # 192.168.122.1
 satellite_dhcp_domain: "{{ ansible_domain }}"  # example.com
-
-# install role satellite-install command:
-satellite_options: >-
-  --foreman-initial-admin-username "{{ satellite_admin_username }}"
-  --foreman-initial-admin-password "{{ satellite_admin_password }}"
-  --foreman-initial-organization  "{{ satellite_organization }}"
-  --foreman-initial-location  "{{ satellite_location }}"
-  --foreman-proxy-dns-managed true
-  --foreman-proxy-dns true
-  --foreman-proxy-dns-interface "{{ satellite_dhcp_interface }}"
-  --foreman-proxy-dns-zone "{{ satellite_dhcp_domain }}"
-  --foreman-proxy-dns-forwarders "192.168.122.10"
-  --foreman-proxy-dns-reverse "122.168.192.in-addr.arpa"
-  --foreman-proxy-dhcp true
-  --foreman-proxy-dhcp-managed true
-  --foreman-proxy-dhcp-interface "{{ satellite_dhcp_interface }}"
-  --foreman-proxy-dhcp-range  "{{ satellite_dhcp_range }}"
-  --foreman-proxy-dhcp-gateway "{{ satellite_dhcp_gateway }}"
-  --foreman-proxy-dhcp-nameservers "{{ satellite_dhcp_nameservers }}"
-  --foreman-proxy-tftp true
-  --foreman-proxy-tftp-managed true
-  --foreman-proxy-tftp-servername "{{ satellite_hostname }}"
-  --foreman-proxy-puppetca true
-  --enable-foreman-plugin-discovery
 
 # install role settings
 satellite_settings:
